@@ -1,8 +1,9 @@
 import { create } from 'apisauce';
 import { AsyncStorage } from 'react-native';
+import config from '../config/config';
 
 const api = create({
-    baseURL: '',
+    baseURL: config.BASE_URL,
 });
 
 api.addAsyncRequestTransform(request => async () => {
