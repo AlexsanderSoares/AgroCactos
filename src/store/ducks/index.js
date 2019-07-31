@@ -1,7 +1,9 @@
 import { combineReducers } from 'redux';
 
-import schedulings from './schedulings';
+import {reducer as offline} from 'redux-offline-queue';
+import {reducer as schedulings} from './schedulings';
 
 export default combineReducers({
+    offline,
     schedulings,
 });

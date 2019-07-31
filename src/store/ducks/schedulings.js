@@ -1,11 +1,20 @@
 import { createActions, createReducer } from 'reduxsauce';
+import { markActionsOffline } from 'redux-offline-queue';
 
-export const { Types, Creators } = createActions({
-    requestSchedulings: [],
+const { Types, Creators } = createActions({
+    schedulingsRequest: [],
+    listSchedulings: ['schedulings'],
     addScheduling: ['scheduling'],
     updateScheduling: ['id'],
-    removeScheduling: ['id'],
+    endSchedulingRequest: ['id'],
+    endScheduling: ['id'],
+    error: [],
 });
+
+markActionsOffline(Creators, ['endScheduling']);
+
+export const SchedulingTypes = Types;
+export default Creators;
 
 const INITIAL_STATE = {
     data: [],
@@ -13,7 +22,7 @@ const INITIAL_STATE = {
     error: null,
 };
 
-const addSchedulings = (state = INITIAL_STATE, action) => 
+const listSchedulings = (state = INITIAL_STATE, action) => 
                             ({ data: action.schedulings, loading: false, error: false });
 
 const addScheduling = (state = INITIAL_STATE, action) => 
@@ -29,19 +38,19 @@ const update = (state = INITIAL_STATE, action) =>
 const remove = (state = INITIAL_STATE, action) => 
                 state.filter(scheduling => scheduling.id != action.scheduling.id);
 
-const requestSchedulings = (state = INITIAL_STATE, action) => ({...state, loading: true});
+const loadingRequest = (state = INITIAL_STATE, action) => ({...state, loading: true});
 
 const errorSchedulings = (state = INITIAL_STATE, action) => ({...state, error: action.error});
 
 
-export default createReducer(INITIAL_STATE, {
+export const reducer = createReducer(INITIAL_STATE, {
 
-    ['ADD_SCHEDULINGS']: addSchedulings,
-    ['ERROR']: errorSchedulings,
-    [Types.REQUEST_SCHEDULINGS]: requestSchedulings,
+    [Types.LIST_SCHEDULINGS]: listSchedulings,
+    [Types.ERROR]: errorSchedulings,
+    [Types.SCHEDULINGS_REQUEST]: loadingRequest,
+    [Types.END_SCHEDULING_REQUEST]: loadingRequest,
     [Types.ADD_SCHEDULING]: addScheduling,
     [Types.UPDATE_SCHEDULING]: update,
-    [Types.REMOVE_SCHEDULING]: remove,
-
+    [Types.END_SCHEDULINGS]: remove,
 });
 

@@ -1,22 +1,13 @@
-import { takeLatest, put } from 'redux-saga/effects';
-import api from '../services/api';
+import { all, spawn, takeLatest, takeEvery } from 'redux-saga/effects';
+import { listSchedulings } from './listSchedulings';
+import { endScheduling } from './endScheduling';
 
-function* getSchedulings(){
-    try{
-
-        const response = yield call(api.get, '');
-
-        yield put({ type: 'ADD_SCHEDULINGS', schedulings: response.data.schedulings });
-
-    }catch(err){
-
-        yield put({ type: 'ERROR', error: err });
-
-    }
-}
+import { startWatchingNetworkConnectivity } from './offline';
 
 export default function* root(){
-    yield[
-        takeLatest('REQUEST_SCHEDULINGS', getSchedulings),
-    ];
+    yield all([
+        spawn(startWatchingNetworkConnectivity),
+        takeEvery('END_SCHEDULING', endScheduling),
+        takeLatest('REQUEST_SCHEDULINGS', listSchedulings),
+    ]);
 }
