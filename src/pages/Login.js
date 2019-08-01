@@ -12,6 +12,7 @@ import {
 import { StackActions, NavigationActions } from 'react-navigation';
 
 import api from '../services/api';
+import Loading from './components/loading';
 
 export default class Login extends Component {
 
@@ -21,6 +22,7 @@ export default class Login extends Component {
         this.state = {
             email: '',
             password: '',
+            loading: true,
         }
     }
 
@@ -64,6 +66,7 @@ export default class Login extends Component {
     render() {
         return (
             <View style={styles.content}>
+                <Loading loading={this.state.loading}/>
                 <View style={styles.title_content}>
                     <Image
                         source={require('./imgs/logoAC.png')}
