@@ -10,11 +10,15 @@ import {
     Alert,
  } from 'react-native';
 import { StackActions, NavigationActions } from 'react-navigation';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 
+import Creators from '../store/ducks/schedulings';
 import api from '../services/api';
 import Loading from './components/loading';
+import { LOGIN_URL } from '../config';
 
-export default class Login extends Component {
+class Login extends Component {
 
     constructor(props){
         super(props);
@@ -22,7 +26,7 @@ export default class Login extends Component {
         this.state = {
             email: '',
             password: '',
-            loading: true,
+            loading: false,
         }
     }
 
@@ -30,25 +34,33 @@ export default class Login extends Component {
         header: null,
     };
 
+    redirect = () => {
+        this.props.navigation.navigate('Home');
+    }
+
 
     login = async () => {
 
         try{
 
-            const response = await api.post('', {
-                login: this.state.email,
+            this.setState({ loading: true });
+
+            const response = await api.post(LOGIN_URL(), {
+                email: this.state.email,
                 password: this.state.password,
             });
 
-            const { user, access_token, expires_in } = response.data;
+            const { user, acess_token, expires } = response.data;
 
             await AsyncStorage.multiSet([
                 ['@AgroCactos:user', JSON.stringify(user)],
-                ['@AgroCactos:access_token', access_token],
-                ['@AgroCactos:expires_in', JSON.stringify(expires_in)],
+                ['@AgroCactos:acess_token', acess_token],
+                ['@AgroCactos:expires', JSON.stringify(expires)],
             ]);
 
-            this.props.navigation.dipatch(StackActions.reset({
+            this.setState({ loading: false });
+
+            this.props.navigation.dispatch(StackActions.reset({
                 index: 0,
                 actions: [
                     NavigationActions.navigate({ routeName: 'Home' }),
@@ -57,23 +69,28 @@ export default class Login extends Component {
 
         }catch(response){
 
-            Alert.alert('Erro', response.data.error);
+            this.setState({ loading: false });
+            Alert.alert('Erro', JSON.stringify(response));
 
         }
 
+    }
+
+    logout = () => {
+        this.props.logout();
     }
     
     render() {
         return (
             <View style={styles.content}>
-                <Loading loading={this.state.loading}/>
+                <Loading loading={this.state.loading || this.props.state.schedulings.loading}/>
                 <View style={styles.title_content}>
                     <Image
                         source={require('./imgs/logoAC.png')}
                         style={styles.img}
                     />
                     <Text style={styles.title}>
-                        Agrocactos
+                        AgroCactos
                     </Text>
                 </View>
                 <TextInput 
@@ -94,7 +111,7 @@ export default class Login extends Component {
                     secureTextEntry={true}
                 />
                 <TouchableOpacity
-                    onPress={() => {}}
+                    onPress={() => this.login()}
                     style={styles.button}
                 >
                     <Text style={{color: '#fff',}}>Entrar</Text>
@@ -103,6 +120,15 @@ export default class Login extends Component {
         );
     }
 }
+
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(Creators, dispatch);
+
+const mapStateToProps = state => ({
+    state,
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);
 
  const styles = StyleSheet.create({
     content: {
@@ -138,6 +164,7 @@ export default class Login extends Component {
         color: '#679436',
         fontFamily: 'Arial san-serif',
         fontWeight: 'bold',
+        textAlign: 'center',
     },
     img: {
         width: 80,

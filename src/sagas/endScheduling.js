@@ -1,12 +1,12 @@
 import { call, put } from 'redux-saga/effects';
 import api from '../services/api';
 import { SchedulingTypes } from '../store/ducks/schedulings';
-import config from '../config/config';
+import { END_SCHEDULING_URL } from '../config';
 
-export function* listSchedulings(action){
+export function* endScheduling(action){
     try{
 
-        const response = yield call(api.get, config.END_SCHEDULING_URL);
+        const response = yield call(api.get, END_SCHEDULING_URL());
 
         yield put({ type: SchedulingTypes.END_SCHEDULING, id: response.data.id });
 

@@ -2,13 +2,14 @@ import { createActions, createReducer } from 'reduxsauce';
 import { markActionsOffline } from 'redux-offline-queue';
 
 const { Types, Creators } = createActions({
-    schedulingsRequest: [],
+    schedulingsRequest: null,
     listSchedulings: ['schedulings'],
     addScheduling: ['scheduling'],
     updateScheduling: ['id'],
     endSchedulingRequest: ['id'],
     endScheduling: ['id'],
-    error: [],
+    error: ['error'],
+    logout: null,
 });
 
 markActionsOffline(Creators, ['endScheduling']);
@@ -23,7 +24,7 @@ const INITIAL_STATE = {
 };
 
 const listSchedulings = (state = INITIAL_STATE, action) => 
-                            ({ data: action.schedulings, loading: false, error: false });
+                            ({ data: action.schedulings, loading: false, error: null });
 
 const addScheduling = (state = INITIAL_STATE, action) => 
                             ({...state, data: [...data, action.scheduling]});
@@ -35,12 +36,17 @@ const update = (state = INITIAL_STATE, action) =>
                         : scheduling
                     );
 
-const remove = (state = INITIAL_STATE, action) => 
-                state.filter(scheduling => scheduling.id != action.scheduling.id);
+const remove = (state = INITIAL_STATE, action) => ({
+                    data: state.data.filter(scheduling => scheduling.id != action.scheduling.id),
+                    loading: false,
+                    error: null,
+                });
 
 const loadingRequest = (state = INITIAL_STATE, action) => ({...state, loading: true});
 
-const errorSchedulings = (state = INITIAL_STATE, action) => ({...state, error: action.error});
+const errorSchedulings = (state = INITIAL_STATE, action) => ({...state, error: action.error, loading: false});
+
+const logout = (state = INITIAL_STATE, action) => ({...state, loading: !state.loading});
 
 
 export const reducer = createReducer(INITIAL_STATE, {
@@ -51,6 +57,7 @@ export const reducer = createReducer(INITIAL_STATE, {
     [Types.END_SCHEDULING_REQUEST]: loadingRequest,
     [Types.ADD_SCHEDULING]: addScheduling,
     [Types.UPDATE_SCHEDULING]: update,
-    [Types.END_SCHEDULINGS]: remove,
+    [Types.END_SCHEDULING]: remove,
+    [Types.LOGOUT]: logout,
 });
 

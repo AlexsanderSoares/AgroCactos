@@ -1,14 +1,14 @@
 import { create } from 'apisauce';
 import { AsyncStorage } from 'react-native';
-import config from '../config/config';
+import { BASE_URL } from '../config';
 
 const api = create({
-    baseURL: config.BASE_URL,
+    baseURL: BASE_URL(),
 });
 
 api.addAsyncRequestTransform(request => async () => {
     const token = 
-            await AsyncStorage.getItem('@AgroCactos:token');
+            await AsyncStorage.getItem('@AgroCactos:acess_token');
 
     if(token)
         request.headers['Authorization'] = `Bearer ${token}`;

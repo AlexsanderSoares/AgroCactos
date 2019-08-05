@@ -1,7 +1,7 @@
 import React from 'react';
 import { Modal, ActivityIndicator, View } from 'react-native';
 
-export default function Loading({ loading }){
+const Loading = ({ loading }) => {
     return(
         <Modal
             animationType="slide"
@@ -20,4 +20,6 @@ export default function Loading({ loading }){
             </View>
         </Modal>
     );
-}
+};
+
+export default Loading;
