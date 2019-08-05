@@ -9,7 +9,7 @@ export default function* root(){
     yield all([
         // spawn(startWatchingNetworkConnectivity),
         takeEvery('END_SCHEDULING', endScheduling),
-        takeLatest('REQUEST_SCHEDULINGS', listSchedulings),
+        takeLatest('SCHEDULINGS_REQUEST', listSchedulings),
         takeLatest('LOGOUT', logout),
     ]);
 }

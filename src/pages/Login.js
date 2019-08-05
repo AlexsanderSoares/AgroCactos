@@ -34,8 +34,13 @@ class Login extends Component {
         header: null,
     };
 
-    redirect = () => {
-        this.props.navigation.navigate('Home');
+    redirect = (rota) => {
+        this.props.navigation.dispatch(StackActions.reset({
+            index: 0,
+            actions: [
+                NavigationActions.navigate({ routeName: rota }),
+            ],
+        }));
     }
 
 
@@ -60,12 +65,7 @@ class Login extends Component {
 
             this.setState({ loading: false });
 
-            this.props.navigation.dispatch(StackActions.reset({
-                index: 0,
-                actions: [
-                    NavigationActions.navigate({ routeName: 'Home' }),
-                ],
-            }));
+            this.redirect('Home');
 
         }catch(response){
 
@@ -79,7 +79,21 @@ class Login extends Component {
     logout = () => {
         this.props.logout();
     }
-    
+
+    diffDate = (date1, date2) => {
+        return Math.abs(date1.getTime() - date2.getTime());
+    }
+
+    async componentDidMount(){
+
+        const user = JSON.parse(await AsyncStorage.getItem('@AgroCactos:user'));
+        const token = await AsyncStorage.getItem('@AgroCactos:acess_token');
+        const expires = JSON.parse(await AsyncStorage.getItem('@AgroCactos:user'));
+            
+        if(user && token && expires)
+            this.redirect('Home');
+    }
+
     render() {
         return (
             <View style={styles.content}>
