@@ -7,8 +7,8 @@ import { startWatchingNetworkConnectivity } from './offline';
 
 export default function* root(){
     yield all([
-        // spawn(startWatchingNetworkConnectivity),
-        takeEvery('END_SCHEDULING', endScheduling),
+        spawn(startWatchingNetworkConnectivity),
+        takeEvery('END_SCHEDULING_REQUEST', endScheduling),
         takeLatest('SCHEDULINGS_REQUEST', listSchedulings),
         takeLatest('LOGOUT', logout),
     ]);

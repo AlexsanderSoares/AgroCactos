@@ -4,18 +4,26 @@ import { View, Text, FlatList, StyleSheet, TouchableOpacity, Alert, } from 'reac
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { ListItem } from 'react-native-elements';
+import NetInfo from "@react-native-community/netinfo";
 
 import Creators from '../store/ducks/schedulings';
 import Loading from './components/loading';
 
 class Home extends Component {
 
+    constructor(props){
+      super(props);
+
+    }
+
     renderItem = (obj) => {
         return (
           <ListItem
               title={obj.item.nameProperty}
               subtitle={obj.item.servico}
-              onPress={() => Alert.alert("Teste", "Teste")}
+              onPress={() => this.props.navigation.navigate('Scheduling', {
+                scheduling: obj.item,
+              })}
               chevron={{color: '#000', size: 25,}}
               bottomDivider
           />
@@ -54,7 +62,6 @@ const styles = StyleSheet.create({
   content: {
       flex: 1,
       justifyContent: 'center',
-      backgroundColor: '#eee',
   },
   list_titulo: {
       fontSize: 20,

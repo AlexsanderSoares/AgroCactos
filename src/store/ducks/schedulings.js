@@ -12,7 +12,7 @@ const { Types, Creators } = createActions({
     logout: null,
 });
 
-markActionsOffline(Creators, ['endScheduling']);
+markActionsOffline(Creators, ['endSchedulingRequest']);
 
 export const SchedulingTypes = Types;
 export default Creators;

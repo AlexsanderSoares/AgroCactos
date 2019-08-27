@@ -6,7 +6,7 @@ import { END_SCHEDULING_URL } from '../config';
 export function* endScheduling(action){
     try{
 
-        const response = yield call(api.get, END_SCHEDULING_URL());
+        const response = yield call(api.post, END_SCHEDULING_URL(action.id));
 
         yield put({ type: SchedulingTypes.END_SCHEDULING, id: response.data.id });
 
