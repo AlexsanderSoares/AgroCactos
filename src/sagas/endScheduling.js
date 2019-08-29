@@ -12,7 +12,7 @@ export function* endScheduling(action){
 
     }catch(err){
 
-        yield put({ type: SchedulingTypes.ERROR, error: err });
+        yield put({ type: SchedulingTypes.ERROR, error: "Não foi possível finalizar o agendamento." });
 
     }
 }

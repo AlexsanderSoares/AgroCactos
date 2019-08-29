@@ -10,6 +10,7 @@ const { Types, Creators } = createActions({
     endScheduling: ['id'],
     error: ['error'],
     logout: null,
+    cleanError: null,
 });
 
 markActionsOffline(Creators, ['endSchedulingRequest']);
@@ -32,7 +33,7 @@ const addScheduling = (state = INITIAL_STATE, action) =>
 const update = (state = INITIAL_STATE, action) => 
             state.data.map(scheduling => 
                         scheduling.id == action.scheduling.id
-                        ? {...scheduling, finished: !scheduling.finished}
+                        ? action.scheduling
                         : scheduling
                     );
 
@@ -44,7 +45,19 @@ const remove = (state = INITIAL_STATE, action) => ({
 
 const loadingRequest = (state = INITIAL_STATE, action) => ({...state, loading: true});
 
+const endSchedulingRequest = (state = INITIAL_STATE, action) => ({
+    data: state.data.map(scheduling => 
+        scheduling.id == action.id
+        ? {...scheduling, finished: true}
+        : scheduling
+    ),
+    loading: true,
+    error: null,
+});
+
 const errorSchedulings = (state = INITIAL_STATE, action) => ({...state, error: action.error, loading: false});
+
+const cleanError = (state = INITIAL_STATE, action) => ({ ...state, error: null });
 
 const logout = (state = INITIAL_STATE, action) => ({...state, loading: !state.loading});
 
@@ -54,7 +67,7 @@ export const reducer = createReducer(INITIAL_STATE, {
     [Types.LIST_SCHEDULINGS]: listSchedulings,
     [Types.ERROR]: errorSchedulings,
     [Types.SCHEDULINGS_REQUEST]: loadingRequest,
-    [Types.END_SCHEDULING_REQUEST]: loadingRequest,
+    [Types.END_SCHEDULING_REQUEST]: endSchedulingRequest,
     [Types.ADD_SCHEDULING]: addScheduling,
     [Types.UPDATE_SCHEDULING]: update,
     [Types.END_SCHEDULING]: remove,

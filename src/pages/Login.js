@@ -76,10 +76,6 @@ class Login extends Component {
 
     }
 
-    logout = () => {
-        this.props.logout();
-    }
-
     diffDate = (date1, date2) => {
         return Math.abs(date1.getTime() - date2.getTime());
     }
@@ -97,7 +93,7 @@ class Login extends Component {
     render() {
         return (
             <View style={styles.content}>
-                <Loading loading={this.state.loading || this.props.state.schedulings.loading}/>
+                <Loading loading={this.state.loading}/>
                 <View style={styles.title_content}>
                     <Image
                         source={require('./imgs/logoAC.png')}

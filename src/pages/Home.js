@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import { View, Text, FlatList, StyleSheet, TouchableOpacity, Alert, } from 'react-native';
+import { View, Text, FlatList, StyleSheet, TouchableOpacity, Alert, RefreshControl } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { ListItem } from 'react-native-elements';
@@ -14,6 +14,10 @@ class Home extends Component {
     constructor(props){
       super(props);
 
+      this.state = {
+          isConnected: false,
+      };
+
     }
 
     renderItem = (obj) => {
@@ -26,24 +30,50 @@ class Home extends Component {
               })}
               chevron={{color: '#000', size: 25,}}
               bottomDivider
+              titleStyle={obj.item.finished ? {color: '#aa0'} : {}}
           />
         );
     }
 
     componentDidMount(){
+
+        this.isConnected();
+
         this.props.schedulingsRequest();
+
+    }
+
+    componentDidUpdate(){
+        if(this.props.state.schedulings.error){
+            Alert.alert("Erro", this.props.state.schedulings.error);
+            this.props.cleanError();
+        }
+    }
+
+    isConnected = async () => {
+        const isConnected = await NetInfo.fetch().isConnected;
+
+        Alert.alert("TESTE", isConnected);
+
+        this.setState({ isConnected });
     }
 
     render() {
         return (
           <View style={styles.content}>
-            <Loading loading={this.props.state.schedulings.loading}/>
-              <FlatList 
+            {/* <Loading loading={this.props.state.schedulings.loading && this.state.isConnected}/> */}
+                <FlatList 
 			              data={this.props.state.schedulings.data}
 			              renderItem= {this.renderItem}
 			              keyExtractor={(item) => item.id.toString()}
-			              extraData={this.props.state}
-			        />
+                    extraData={this.props.state}
+                    refreshControl={
+                      <RefreshControl
+                          refreshing={this.props.state.schedulings.loading}
+                          onRefresh={() => this.props.schedulingsRequest()}
+                      />
+                    }
+                />
           </View>
         );
     }

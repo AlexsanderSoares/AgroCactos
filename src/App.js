@@ -1,19 +1,15 @@
 import React, { Component } from 'react';
 import { createStackNavigator, createAppContainer } from 'react-navigation';
 import { Provider } from 'react-redux';
-// import { TouchableOpacity, Text } from 'react-native';
-// import { Icon } from 'react-native-elements';
 import BackgroundTask from 'react-native-background-task';
-import NetInfo from '@react-native-community/netinfo';
-import { OFFLINE, ONLINE } from 'redux-offline-queue';
 
 import { store, persistor } from './store';
+import { startWatchingNetworkConnectivity } from './sagas/offline';
+
 import LoginProvider from './pages/Providers/LoginProvider';
 import HomeScreen from './pages/Providers/HomeProvider';
 import SchedulingScreen from './pages/Providers/SchedulingProvider';
-// import ProfileScreen from './pages/Profile';
-import { startWatchingNetworkConnectivity } from './sagas/offline';
-
+import ProfileScreen from './pages/Profile';
 
 BackgroundTask.define(async () => {
 
@@ -25,6 +21,7 @@ BackgroundTask.define(async () => {
 
 
 import ProfileButtonComponent from './pages/components/profileButtonComponent';
+import LogoutButtonComponent from './pages/components/logoutButtonComponent';
 
 const AppNavigator = createAppContainer(createStackNavigator({
   Login: {
@@ -49,7 +46,19 @@ const AppNavigator = createAppContainer(createStackNavigator({
   Scheduling: {
     screen: SchedulingScreen,
   },
-  // Profile: ProfileScreen,
+  Profile:{
+    screen: ProfileScreen,
+    navigationOptions: {
+      title: "Perfil",
+      headerTintColor: '#fff',
+      headerStyle: {
+        backgroundColor: '#679436',
+      },
+      headerRight: (
+        <LogoutButtonComponent/>
+      ),
+    }
+  },
 }));
 
 class App extends Component{

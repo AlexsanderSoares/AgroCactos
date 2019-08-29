@@ -12,7 +12,7 @@ export function* listSchedulings(){
 
     }catch(err){
 
-        yield put({ type: SchedulingTypes.ERROR, error: err });
+        yield put({ type: SchedulingTypes.ERROR, error: "Não foi possível listar os agendamentos." });
 
     }
 }

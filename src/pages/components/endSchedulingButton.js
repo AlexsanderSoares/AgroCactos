@@ -22,7 +22,7 @@ class EndSchedulingButton extends Component{
                     type="font-awesome"
                     name="check"
                     color="#fff"
-                    size={16}s
+                    size={16}
                 />
             </TouchableOpacity>
         );
