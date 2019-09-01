@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { TouchableOpacity, Text } from 'react-native';
+import { TouchableOpacity, Text, Alert } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -11,7 +11,10 @@ class EndSchedulingButton extends Component{
     endScheduling = (id) => {
         this.props.endSchedulingRequest(id);
 
-        this.props.navigation.navigate('Home');
+        if(this.props.state.schedulings.error)
+            Alert.alert("Erro", "Não foi posível finalizar o agendamento.");
+        else
+            this.props.navigation.navigate('Home');
     }
 
     render(){

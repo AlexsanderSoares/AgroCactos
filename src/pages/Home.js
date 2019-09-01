@@ -20,6 +20,22 @@ class Home extends Component {
 
     }
 
+    listSchedulings = () => {
+
+      this.props.schedulingsRequest();
+
+    }
+
+    componentDidMount(){
+        this.listSchedulings();
+    }
+
+    endSchedulingError = (id) => {
+        const scheduling = this.props.state.schedulings.schedulingsError.find(s => s === id);
+
+        return scheduling !== undefined;
+    }
+
     renderItem = (obj) => {
         return (
           <ListItem
@@ -30,38 +46,18 @@ class Home extends Component {
               })}
               chevron={{color: '#000', size: 25,}}
               bottomDivider
-              titleStyle={obj.item.finished ? {color: '#aa0'} : {}}
+              titleStyle={
+                this.endSchedulingError(obj.item.id) ? {color: '#f00'} :
+                obj.item.finished ? {color: '#aa0'} : {}
+              }
           />
         );
-    }
-
-    componentDidMount(){
-
-        this.isConnected();
-
-        this.props.schedulingsRequest();
-
-    }
-
-    componentDidUpdate(){
-        if(this.props.state.schedulings.error){
-            Alert.alert("Erro", this.props.state.schedulings.error);
-            this.props.cleanError();
-        }
-    }
-
-    isConnected = async () => {
-        const isConnected = await NetInfo.fetch().isConnected;
-
-        Alert.alert("TESTE", isConnected);
-
-        this.setState({ isConnected });
+    
     }
 
     render() {
         return (
           <View style={styles.content}>
-            {/* <Loading loading={this.props.state.schedulings.loading && this.state.isConnected}/> */}
                 <FlatList 
 			              data={this.props.state.schedulings.data}
 			              renderItem= {this.renderItem}
@@ -70,7 +66,7 @@ class Home extends Component {
                     refreshControl={
                       <RefreshControl
                           refreshing={this.props.state.schedulings.loading}
-                          onRefresh={() => this.props.schedulingsRequest()}
+                          onRefresh={() => this.listSchedulings()}
                       />
                     }
                 />

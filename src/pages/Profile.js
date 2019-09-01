@@ -29,7 +29,7 @@ class Profile extends Component {
     render() {
         return(
             <View style={styles.content}>
-                <Loading loading={this.props.state.schedulings.loading}/>
+                {/* <Loading loading={this.props.state.schedulings.loading}/> */}
                 <ScrollView>
                     <View style={styles.foto}>
                         <Avatar

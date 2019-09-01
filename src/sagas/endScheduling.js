@@ -8,11 +8,15 @@ export function* endScheduling(action){
 
         const response = yield call(api.post, END_SCHEDULING_URL(action.id));
 
-        yield put({ type: SchedulingTypes.END_SCHEDULING, id: response.data.id });
+        yield put({ type: SchedulingTypes.END_SCHEDULING, id: action.id });
 
     }catch(err){
 
-        yield put({ type: SchedulingTypes.ERROR, error: "Não foi possível finalizar o agendamento." });
+        yield put({ 
+            type: SchedulingTypes.ERROR_END_SCHEDULING, 
+            id: action.id, 
+            message: "Não foi possível finalizar o agendamento.", 
+        });
 
     }
 }

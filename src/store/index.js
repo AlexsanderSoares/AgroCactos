@@ -10,6 +10,7 @@ import rootSaga from '../sagas';
 const persistConfig = {
     key: 'root',
     storage,
+    blacklist: ['errors'],
 };
 
 const middlewares = [];
