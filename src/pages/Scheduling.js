@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import { View, Text, StyleSheet, TouchableOpacity, Alert, ScrollView} from 'react-native';
+import { View, Text, StyleSheet, AsyncStorage, Alert, ScrollView} from 'react-native';
 
 
 export default class Scheduling extends Component {
@@ -13,7 +13,16 @@ export default class Scheduling extends Component {
         };
     }
 
-    componentDidMount(){
+    async componentDidMount(){
+
+        const user = JSON.parse(await AsyncStorage.getItem('@AgroCactos:user'));
+
+        if(!user){
+            Alert.alert("É necessario efetuar login novamente");
+
+            this.props.navigation.navigate('Login');
+        }
+
         this.setState({ scheduling: this.props.navigation.getParam('scheduling', {}) });
     }
     

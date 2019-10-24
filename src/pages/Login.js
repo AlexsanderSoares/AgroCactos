@@ -57,6 +57,9 @@ class Login extends Component {
 
             const { user, acess_token, expires } = response.data;
 
+            console.log(user);
+            console.log(acess_token);
+
             await AsyncStorage.multiSet([
                 ['@AgroCactos:user', JSON.stringify(user)],
                 ['@AgroCactos:acess_token', acess_token],
@@ -70,23 +73,43 @@ class Login extends Component {
         }catch(response){
 
             this.setState({ loading: false });
-            Alert.alert('Erro', JSON.stringify(response));
+            Alert.alert('Erro', "Não foi possível efetuar login");
 
         }
 
     }
 
-    diffDate = (date1, date2) => {
-        return Math.abs(date1.getTime() - date2.getTime());
+    verifDate = (data) => {
+        const dmy = data.replace(/[.]|[ ]|[:]/g, '-').split('-');
+
+        const dateExpires = new Date(dmy[0], dmy[1] - 1, dmy[2], dmy[3], dmy[4], dmy[5]);
+
+        const now = new Date();
+
+        return now > dateExpires;
     }
 
     async componentDidMount(){
 
+        const expires = JSON.parse(await AsyncStorage.getItem('@AgroCactos:expires'));
+
+        if(expires !== null && this.verifDate(expires.date)){
+
+            const keys = ['@AgroCactos:expires', '@AgroCactos:acess_token', '@AgroCactos:user'];
+            
+            await AsyncStorage.multiRemove(keys, function(err) {
+                if(err)
+                    Alert.alert("Erro", "Ocorreu um erro inesperado.");
+
+            });
+
+        }
+
         const user = JSON.parse(await AsyncStorage.getItem('@AgroCactos:user'));
         const token = await AsyncStorage.getItem('@AgroCactos:acess_token');
-        const expires = JSON.parse(await AsyncStorage.getItem('@AgroCactos:user'));
-            
-        if(user && token && expires)
+
+
+        if(user && token && expires) 
             this.redirect('Home');
     }
 

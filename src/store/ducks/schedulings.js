@@ -21,6 +21,7 @@ const INITIAL_STATE = {
     data: [],
     loading: false,
     schedulingsError: [],
+    schedulingsFinished: [],
 };
 
 const listSchedulings = (state = INITIAL_STATE, action) => 
@@ -41,6 +42,7 @@ const update = (state = INITIAL_STATE, action) => ({
 const remove = (state = INITIAL_STATE, action) => ({
                     data: state.data.filter(scheduling => scheduling.id != action.id),
                     schedulingsError: state.schedulingsError.filter(schedulingId => schedulingId != action.id),
+                    schedulingsFinished: state.schedulingsFinished.filter(schedulingId => schedulingId != action.id),
                     loading: false,
                 });
 
@@ -48,17 +50,15 @@ const loadingRequest = (state = INITIAL_STATE, action) => ({...state, loading: t
 
 const endSchedulingRequest = (state = INITIAL_STATE, action) => ({
     ...state,
-    data: state.data.map(scheduling => 
-        scheduling.id == action.id
-        ? {...scheduling, finished: true}
-        : scheduling
-    ),
+    schedulingsError: state.schedulingsError.filter(schedulingId => schedulingId !== action.id),
+    schedulingsFinished: [...state.schedulingsFinished, action.id],
     loading: true,
 });
 
 const errorEndScheduling = (state = INITIAL_STATE, action) => ({
     ...state,
     schedulingsError: [...state.schedulingsError, action.id],
+    schedulingsFinished: state.schedulingsFinished.filter(schedulingId => schedulingId != action.id),
     loading: false,
 });
 

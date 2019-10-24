@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import { View, StyleSheet, AsyncStorage, ScrollView, Text, TouchableOpacity} from 'react-native';
+import { View, StyleSheet, AsyncStorage, ScrollView, Text, Alert} from 'react-native';
 import { Avatar } from 'react-native-elements';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -14,7 +14,24 @@ class Profile extends Component {
         super(props);
 
         this.state = {
-            user: {},
+            user: {
+                foto: null,
+                nome: null,
+                email: null,
+                sexo: null,
+                data_nasc: null,
+                status: null,
+                cpf: null,
+                cnh: null,
+                uf: null,
+                cidade: null,
+                bairro: null,
+                rua: null,
+                numero: null,
+                cep: null,
+                ddd: null,
+                telefone: null,
+            },
         };
     }
 
@@ -22,7 +39,12 @@ class Profile extends Component {
 
         const user  = JSON.parse(await AsyncStorage.getItem('@AgroCactos:user'));
 
-        this.setState({ user });
+        if(!user){
+            Alert.alert("Erro", "É necessario fazer login novamente.");
+
+            this.props.navigation.navigate('Login');
+        }else
+            this.setState({ user });
 
     }
 

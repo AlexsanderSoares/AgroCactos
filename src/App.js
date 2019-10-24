@@ -4,7 +4,7 @@ import { Provider } from 'react-redux';
 import BackgroundTask from 'react-native-background-task';
 
 import { store, persistor } from './store';
-import { startWatchingNetworkConnectivity } from './sagas/offline';
+import { offlineBackground } from './sagas/offlineBackground';
 
 import LoginProvider from './pages/Providers/LoginProvider';
 import HomeScreen from './pages/Providers/HomeProvider';
@@ -13,7 +13,7 @@ import ProfileScreen from './pages/Profile';
 
 BackgroundTask.define(async () => {
 
-  startWatchingNetworkConnectivity();
+  offlineBackground();
 
   BackgroundTask.finish();
 
@@ -64,7 +64,7 @@ const AppNavigator = createAppContainer(createStackNavigator({
 class App extends Component{
 
   componentDidMount(){
-      BackgroundTask.schedule({ period: 300 });
+      BackgroundTask.schedule();
   }
 
   render() {
