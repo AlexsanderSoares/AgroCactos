@@ -18,6 +18,8 @@ import api from '../services/api';
 import Loading from './components/loading';
 import { LOGIN_URL } from '../config';
 
+// import PushNotification from 'react-native-push-notification';
+
 class Login extends Component {
 
     constructor(props){
@@ -75,6 +77,8 @@ class Login extends Component {
             this.setState({ loading: false });
             Alert.alert('Erro', "Não foi possível efetuar login");
 
+            console.log(response);
+
         }
 
     }
@@ -90,6 +94,13 @@ class Login extends Component {
     }
 
     async componentDidMount(){
+
+        // PushNotification.localNotification({
+        //     title: "O agendamento não foi finalizado",
+        //     message: "Por favor, verifique sua conexão e tente novamente.",
+        //     smallIcon: 'ic_launcher',
+        //     largeIcon: 'ic_launcher',
+        // });
 
         const expires = JSON.parse(await AsyncStorage.getItem('@AgroCactos:expires'));
 
@@ -116,7 +127,7 @@ class Login extends Component {
     render() {
         return (
             <View style={styles.content}>
-                <Loading loading={this.state.loading}/>
+            
                 <View style={styles.title_content}>
                     <Image
                         source={require('./imgs/logoAC.png')}
@@ -134,6 +145,8 @@ class Login extends Component {
                     placeholder="E-mail"
                     textContentType="emailAddress"
                     keyboardType="email-address"
+                    editable={!this.state.loading}
+                    autoCapitalize="none"
                 />
                 <TextInput 
                     textContentType="password" 
@@ -142,6 +155,7 @@ class Login extends Component {
                     style={styles.inputText}
                     placeholder="Senha"
                     secureTextEntry={true}
+                    editable={!this.state.loading}
                 />
                 <TouchableOpacity
                     onPress={() => this.login()}
@@ -149,6 +163,8 @@ class Login extends Component {
                 >
                     <Text style={{color: '#fff',}}>Entrar</Text>
                 </TouchableOpacity>
+
+                { this.state.loading && <Loading/> }
             </View>
         );
     }

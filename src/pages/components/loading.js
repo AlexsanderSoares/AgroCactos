@@ -1,16 +1,11 @@
 import React from 'react';
-import { Modal, ActivityIndicator, View } from 'react-native';
+import { Modal, ActivityIndicator, View, StyleSheet } from 'react-native';
 
-const Loading = ({ loading }) => {
+const Loading = () => {
     return(
-        <Modal
-            animationType="slide"
-            transparent={true}
-            visible={loading}
-        >
             <View
                 style={{
-                    flex: 1,
+                    ...StyleSheet.absoluteFill,
                     justifyContent: 'center',
                     alignItems: 'center',
                     backgroundColor: 'rgba(0, 0, 0, 0.6)',
@@ -18,7 +13,6 @@ const Loading = ({ loading }) => {
             >
                 <ActivityIndicator size="large" color="#00ff00"/>
             </View>
-        </Modal>
     );
 };
 

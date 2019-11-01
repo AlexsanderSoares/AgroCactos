@@ -10,6 +10,7 @@ const { Types, Creators } = createActions({
     endScheduling: ['id'],
     errorEndScheduling: ['id'],
     errorListSchedulings: null,
+    isConnected: null,
 });
 
 markActionsOffline(Creators, ['endSchedulingRequest']);

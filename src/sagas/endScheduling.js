@@ -3,6 +3,7 @@ import api from '../services/api';
 import { SchedulingTypes } from '../store/ducks/schedulings';
 import { END_SCHEDULING_URL } from '../config';
 import { AsyncStorage, Alert } from 'react-native';
+import PushNotification from 'react-native-push-notification';
 
 export function* endScheduling(action){
     try{
@@ -12,6 +13,8 @@ export function* endScheduling(action){
         yield put({ type: SchedulingTypes.END_SCHEDULING, id: action.id });
 
     }catch(err){
+
+        console.log(err);
 
         if(err.status == 401){
 
@@ -24,7 +27,11 @@ export function* endScheduling(action){
 
         }
 
-        Alert.alert("Erro", "Não foi possível finalizar o agendamento.");
+        PushNotification.localNotification({
+            title: "O agendamento não foi finalizado",
+            message: "Ocorreu um erro, por favor, tente novamente.",
+            smallIcon: 'icon',
+        });
 
         yield put({ 
             type: SchedulingTypes.ERROR_END_SCHEDULING, 
